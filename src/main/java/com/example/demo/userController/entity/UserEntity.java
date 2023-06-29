@@ -1,9 +1,8 @@
 package com.example.demo.userController.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class UserEntity {
@@ -12,6 +11,9 @@ public class UserEntity {
     private Long id;
     private String userName;
     private String password;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<ToDoEntity> toDos;
 
     public UserEntity() {
     }
