@@ -1,50 +1,58 @@
 package com.example.demo.restGetController;
 
 import com.example.demo.exceptions.NotFoundException;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/greeting")
 public class GreetingController {
 
-    public List<MessageDataResponse> messagesData = new ArrayList<MessageDataResponse>() {{
-
-        add(new MessageDataResponse(1, "Text1"));
-        add(new MessageDataResponse(2, "Text2"));
+    public List<MessageData> messagesData = new ArrayList<MessageData>() {{
+        add(new MessageData(1, "Text1"));
+        add(new MessageData(2, "Text2"));
     }};
 
+    private final AtomicLong idIncrement = new AtomicLong(messagesData.size());
+
     @GetMapping
-    public List<MessageDataResponse> listMassage() {
+    public List<MessageData> listMassage() {
         return messagesData;
     }
 
     @GetMapping("{id}")
-    public MessageDataResponse getOneMessage(@PathVariable int id) {
+    public MessageData getOneMessage(@PathVariable int id) {
         return getMessageWithId(id);
     }
 
     @PostMapping
-    public MessageDataResponse createMessage(@RequestBody MessageDataRequest message) {
-        int lastId = messagesData.stream().max(Comparator.comparing(MessageDataResponse::getId)).get().getId();
-        int indexedId = ++lastId;
-        messagesData.add(new MessageDataResponse(indexedId, message.getText()));
+    public MessageData createMessage(@RequestBody MessageDataRequest message) {
+        long indexedId = idIncrement.incrementAndGet();
+        messagesData.add(new MessageData(indexedId, message.getText()));
         return getMessageWithId(indexedId);
     }
 
     @PutMapping("{id}")
-    public MessageDataResponse updateMessage(@PathVariable int id, @RequestBody MessageDataRequest messageToUpdate) {
-        MessageDataResponse message = getMessageWithId(id);
+    public MessageData updateMessage(@PathVariable long id, @RequestBody MessageDataRequest messageToUpdate) {
+        MessageData message = getMessageWithId(id);
         message.setText(messageToUpdate.getText());
-        Collections.replaceAll(messagesData, getMessageWithId(id), message);
+        Assert.isTrue(Collections.replaceAll(messagesData, getMessageWithId(id), message), "");
         return message;
     }
 
-    private MessageDataResponse getMessageWithId(@PathVariable int id) {
+    @DeleteMapping("{id}")
+    public void deleteMessage(@PathVariable long id) {
+        MessageData messageData = getMessageWithId(id);
+        messagesData.remove(messageData);
+    }
+
+    private MessageData getMessageWithId(@PathVariable long id) {
         return messagesData.stream()
                 .filter(message -> message.getId() == id)
                 .findFirst()
