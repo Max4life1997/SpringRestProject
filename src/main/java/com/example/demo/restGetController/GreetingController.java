@@ -6,15 +6,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
-@RequestMapping("/greeting")
+@RequestMapping("/message")
 public class GreetingController {
 
-    public List<MessageData> messagesData = new ArrayList<MessageData>() {{
+    public List<MessageData> messagesData = new ArrayList<>() {{
         add(new MessageData(1, "Text1"));
         add(new MessageData(2, "Text2"));
     }};
@@ -58,23 +57,4 @@ public class GreetingController {
                 .findFirst()
                 .orElseThrow(NotFoundException::new);
     }
-//    @GetMapping("{id}")
-//    public Map<String, String> getOneMessage(@PathVariable String id) {
-//        return messagesData.stream()
-//                .filter(message -> message.get("id").equals(id))
-//                .findFirst()
-//                .orElseThrow(NotFoundException::new);
-//    }
-
-//    @PostMapping
-//    public Map<String,String> create(@RequestBody)
-
-
-//    private static final String template = "Hello? %s";
-//    private final AtomicLong counter = new AtomicLong();
-//
-//    @GetMapping()
-//    public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-//        return new Greeting(counter.incrementAndGet(), String.format(template, name));
-//    }
 }
