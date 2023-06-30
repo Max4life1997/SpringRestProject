@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "todo")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,7 +14,7 @@ public class UserEntity {
     private String password;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<ToDoEntity> toDos;
+    private List<ToDoEntity> toDoEntityList;
 
     public UserEntity() {
     }
@@ -22,7 +23,7 @@ public class UserEntity {
         return id;
     }
 
-    public void setId(Long id) {
+    private void setId(Long id) {
         this.id = id;
     }
 
@@ -40,5 +41,13 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<ToDoEntity> getToDoEntityList() {
+        return toDoEntityList;
+    }
+
+    public void setToDoEntityList(List<ToDoEntity> toDos) {
+        this.toDoEntityList = toDos;
     }
 }

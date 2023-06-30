@@ -4,24 +4,27 @@ import com.example.demo.userController.model.User;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "todo")
 public class ToDoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private Boolean comleted;
+    private Boolean completed;
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public ToDoEntity(){}
+    public ToDoEntity() {
+    }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    private void setId(Long id) {
         this.id = id;
     }
 
@@ -34,10 +37,26 @@ public class ToDoEntity {
     }
 
     public Boolean getComleted() {
-        return comleted;
+        return completed;
     }
 
-    public void setComleted(Boolean comleted) {
-        this.comleted = comleted;
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
